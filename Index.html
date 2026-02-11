@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="center">
+        <img class="goma" src="coolGoma.gif" alt="coolGoma">
+        <div class="prompt">Are you ready, my Babe 💖?</div>
+        <div class="actions">
+            <button type="button" id="yes-btn" onclick="location.href='yes.html'">Yes</button>
+            <button type="button" id="no-btn">No</button>
+        </div>
+    </div>
+    <style>
+        @font-face {
+            font-family: "Playpen Sans";
+            font-style: normal;
+            font-display: swap;
+            font-weight: 400;
+            src: url(https://cdn.jsdelivr.net/fontsource/fonts/playpen-sans@latest/latin-400-normal.woff2) format("woff2"),
+                 url(https://cdn.jsdelivr.net/fontsource/fonts/playpen-sans@latest/latin-400-normal.woff) format("woff");
+            unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Roboto", Arial, sans-serif;
+            background: #FEE7EF;
+            color: #111111;
+            overflow: hidden;
+        }
+        .hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .heart {
+            position: absolute;
+            top: -20px;
+            color: #ff5a7a;
+            opacity: 0.85;
+            animation: fall linear forwards;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            will-change: transform;
+        }
+        .center {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .prompt {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 36px;
+            margin-left: 15px;
+            opacity: 0;
+            animation: slideDown 2s ease-out forwards;
+            font-family: "Playpen Sans", cursive;
+        }
+        .goma {
+            width: 280px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+            opacity: 0;
+            animation: slideDown 2s ease-out forwards;
+        }
+        .actions button {
+            padding: 20px 38px;
+            margin: 0 30px;
+            font-size: 26px;
+            cursor: pointer;
+            border-radius: 999px;
+            background: royalblue;
+            color: #ffffff;
+            border: 2px solid royalblue;
+            transition: transform 0.15s ease;
+        }
+        .actions {
+            opacity: 0;
+            animation: slideDown 2s ease-out forwards;
+            animation-delay: 1s;
+            position: relative;
+            padding-top: 12px;
+        }
+        #no-btn {
+            position: relative;
+            transition: transform 0.15s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+    </style>
+    <script>
+        const noBtn = document.getElementById("no-btn");
+        const yesBtn = document.getElementById("yes-btn");
+        const prompt = document.querySelector(".prompt");
+        let yesScale = 1;
+        let maxYesScale = 5.2;
+        let baseYesRect = null;
+
+        let baseRect = null;
+
+        function updateBaseRect() {
+            baseRect = noBtn.getBoundingClientRect();
+        }
+        function updateYesMetrics() {
+            yesBtn.style.transform = "scale(1)";
+            baseYesRect = yesBtn.getBoundingClientRect();
+            const promptRect = prompt.getBoundingClientRect();
+            const gap = baseYesRect.top - promptRect.bottom;
+            if (gap <= 0) {
+                maxYesScale = 1;
+                return;
+            }
+            maxYesScale = Math.min(3.2, 1 + (2 * gap) / baseYesRect.height);
+        }
+
+        function applyYesScale() {
+            yesBtn.style.transform = `scale(${yesScale})`;
+            if (!baseYesRect) return;
+            const growUp = (baseYesRect.height * (yesScale - 1)) / 2;
+            const offset = Math.max(0, growUp - 2);
+            yesBtn.style.marginTop = `${offset}px`;
+        }
+
+        function placeNoButtonRandom() {
+            if (!baseRect) updateBaseRect();
+
+            const minX = -baseRect.left;
+            const maxX = window.innerWidth - baseRect.right;
+            const minY = -baseRect.top;
+            const maxY = window.innerHeight - baseRect.bottom;
+
+            const x = Math.random() * (maxX - minX) + minX;
+            const y = Math.random() * (maxY - minY) + minY;
+
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+            yesScale = Math.min(maxYesScale, yesScale + 0.12);
+            applyYesScale();
+        }
+
+        function isNearButton(clientX, clientY) {
+            const rect = noBtn.getBoundingClientRect();
+            const padding = 40;
+            return (
+                clientX > rect.left - padding &&
+                clientX < rect.right + padding &&
+                clientY > rect.top - padding &&
+                clientY < rect.bottom + padding
+            );
+        }
+
+        function evade(e) {
+            if (isNearButton(e.clientX, e.clientY)) {
+                placeNoButtonRandom();
+            }
+        }
+
+        function setNoButtonToDefaultPosition() {
+            noBtn.style.transform = "translate(0, 0)";
+            updateBaseRect();
+            updateYesMetrics();
+            applyYesScale();
+        }
+
+        window.addEventListener("mousemove", evade);
+        noBtn.addEventListener("mouseenter", placeNoButtonRandom);
+        noBtn.addEventListener("mousedown", placeNoButtonRandom);
+        noBtn.addEventListener("click", placeNoButtonRandom);
+        window.addEventListener("resize", setNoButtonToDefaultPosition);
+        setNoButtonToDefaultPosition();
+    </script>
+    <script>
+        const hearts = document.getElementById("hearts");
+        const MAX_HEARTS = 48;
+
+        function spawnHeart() {
+            if (hearts.children.length >= MAX_HEARTS) return;
+
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.textContent = "❤";
+
+            const size = 12 + Math.random() * 18;
+            const duration = 4 + Math.random() * 6;
+            const left = Math.random() * 100;
+            const drift = -20 + Math.random() * 40;
+
+            heart.style.fontSize = `${size}px`;
+            heart.style.left = `${left}vw`;
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.transform = `translateX(${drift}px)`;
+
+            hearts.appendChild(heart);
+            setTimeout(() => heart.remove(), duration * 1000);
+        }
+
+        setInterval(spawnHeart, 250);
+    </script>
+</body>
+</html>

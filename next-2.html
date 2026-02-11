@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            background: #0b0b0f;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .back-btn {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            padding: 12px 26px;
+            border-radius: 999px;
+            border: 2px solid #d9a8b7;
+            background: #fff6f9;
+            color: #7a3f4e;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 12;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.2s ease;
+        }
+        .back-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(120, 60, 80, 0.18);
+        }
+        @media (max-width: 768px) {
+            .back-btn {
+                left: 16px;
+                bottom: 16px;
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="heart3d"></canvas>
+    <button class="back-btn" id="back-btn" type="button">Back</button>
+    <script>
+        const canvas = document.getElementById("heart3d");
+        const ctx = canvas.getContext("2d");
+
+        let w = 0;
+        let h = 0;
+        let points = [];
+        let gather = 0;
+        let targetGather = 0;
+        let textMorph = 0;
+        let textMorphTarget = 0;
+        let fireworks = [];
+        let cornerBurstDone = false;
+        let morphTimer = null;
+        let lastTextBurst = 0;
+        let textFireworksActive = false;
+        let textFireworksStart = 0;
+        const textFireworksDuration = 5200;
+        let sequenceComplete = false;
+
+        const backBtn = document.getElementById("back-btn");
+
+        const resize = () => {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = Math.floor(w * dpr);
+            canvas.height = Math.floor(h * dpr);
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h}px`;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        const buildTextPoints = () => {
+            const text = "I love you ♥️";
+            const tCanvas = document.createElement("canvas");
+            const tCtx = tCanvas.getContext("2d");
+            tCanvas.width = 640;
+            tCanvas.height = 200;
+            tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+            tCtx.fillStyle = "#ffffff";
+            tCtx.textAlign = "center";
+            tCtx.textBaseline = "middle";
+            tCtx.font = "88px 'Great Vibes', cursive";
+            tCtx.fillText(text, tCanvas.width / 2, tCanvas.height / 2);
+
+            const img = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height).data;
+            const textPoints = [];
+            const step = 2;
+            const sx = 24;
+            const sy = 8;
+            for (let y = 0; y < tCanvas.height; y += step) {
+                for (let x = 0; x < tCanvas.width; x += step) {
+                    const idx = (y * tCanvas.width + x) * 4 + 3;
+                    if (img[idx] > 20) {
+                        const nx = ((x - tCanvas.width / 2) / (tCanvas.width / 2)) * sx;
+                        const ny = -((y - tCanvas.height / 2) / (tCanvas.height / 2)) * sy;
+                        const nz = (Math.random() * 2 - 1) * 6;
+                        textPoints.push({ x: nx, y: ny, z: nz });
+                    }
+                }
+            }
+            return textPoints;
+        };
+
+        const buildHeart = () => {
+            const total = 2600;
+            const depth = 20;
+            const spread = 60;
+            const textPoints = buildTextPoints();
+            points = [];
+            for (let i = 0; i < total; i += 1) {
+                const t = Math.random() * Math.PI * 2;
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+
+                const onEdge = Math.random() < 0.35;
+                const r = onEdge ? 1 : Math.pow(Math.random(), 0.45);
+                const px = x * r;
+                const py = y * r;
+                const pz = (Math.random() * 2 - 1) * depth;
+                const amp = onEdge ? 0.22 : 0.7;
+                const speed = 0.0008 + Math.random() * 0.0012;
+                const phase = Math.random() * Math.PI * 2;
+                const sx = (Math.random() * 2 - 1) * spread;
+                const sy = (Math.random() * 2 - 1) * spread;
+                const sz = (Math.random() * 2 - 1) * depth * 2;
+                const jitter = onEdge ? 0.6 : 0.2;
+                const tp = textPoints[i % textPoints.length];
+                points.push({
+                    bx: px,
+                    by: py,
+                    bz: pz,
+                    tx: tp.x,
+                    ty: tp.y,
+                    tz: tp.z,
+                    sx,
+                    sy,
+                    sz,
+                    amp,
+                    speed,
+                    phase,
+                    jitter,
+                    edge: onEdge
+                });
+            }
+        };
+
+        const spawnFireworks = (positions) => {
+            for (let i = 0; i < positions.length; i += 1) {
+                const fx = positions[i].x;
+                const fy = positions[i].y;
+                const sparks = [];
+                const sparkCount = 30 + Math.floor(Math.random() * 12);
+                for (let s = 0; s < sparkCount; s += 1) {
+                    const a = Math.random() * Math.PI * 2;
+                    const v = 0.9 + Math.random() * 2.0;
+                    sparks.push({
+                        x: fx,
+                        y: fy,
+                        vx: Math.cos(a) * v,
+                        vy: Math.sin(a) * v,
+                        life: 1
+                    });
+                }
+                fireworks.push({ sparks });
+            }
+        };
+
+        const spawnTextFireworks = (centerX, centerY) => {
+            const positions = [];
+            const ringX = Math.min(w, h) * 0.22;
+            const ringY = Math.min(w, h) * 0.11;
+            const count = 5;
+            for (let i = 0; i < count; i += 1) {
+                const a = Math.random() * Math.PI * 2;
+                positions.push({
+                    x: centerX + Math.cos(a) * ringX,
+                    y: centerY + Math.sin(a) * ringY
+                });
+            }
+            spawnFireworks(positions);
+        };
+
+        const updateFireworks = () => {
+            for (let i = fireworks.length - 1; i >= 0; i -= 1) {
+                const fw = fireworks[i];
+                for (let s = fw.sparks.length - 1; s >= 0; s -= 1) {
+                    const sp = fw.sparks[s];
+                    sp.x += sp.vx;
+                    sp.y += sp.vy;
+                    sp.vy += 0.01;
+                    sp.life -= 0.012;
+                    if (sp.life <= 0) {
+                        fw.sparks.splice(s, 1);
+                    }
+                }
+                if (fw.sparks.length === 0) {
+                    fireworks.splice(i, 1);
+                }
+            }
+        };
+
+        const renderFireworks = () => {
+            ctx.globalCompositeOperation = "lighter";
+            for (let i = 0; i < fireworks.length; i += 1) {
+                const fw = fireworks[i];
+                for (let s = 0; s < fw.sparks.length; s += 1) {
+                    const sp = fw.sparks[s];
+                    ctx.fillStyle = `rgba(255, 160, 190, ${Math.max(0, sp.life)})`;
+                    ctx.beginPath();
+                    ctx.arc(sp.x, sp.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            ctx.globalCompositeOperation = "source-over";
+        };
+
+        const render = (time) => {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = "#0b0b0f";
+            ctx.fillRect(0, 0, w, h);
+
+            const centerX = w * 0.5;
+            const centerY = h * 0.5;
+            gather += (targetGather - gather) * 0.04;
+            textMorph += (textMorphTarget - textMorph) * 0.05;
+            if (targetGather > 0.5 && !cornerBurstDone && gather > 0.9) {
+                cornerBurstDone = true;
+                const centerX = w * 0.5;
+                const centerY = h * 0.5;
+                const radiusX = Math.min(w, h) * 0.32;
+                const radiusY = Math.min(w, h) * 0.24;
+                const positions = [];
+                for (let i = 0; i < 8; i += 1) {
+                    const angle = (Math.PI * 2 * i) / 8 + 0.2;
+                    positions.push({
+                        x: centerX + Math.cos(angle) * radiusX,
+                        y: centerY + Math.sin(angle) * radiusY
+                    });
+                }
+                spawnFireworks(positions);
+                if (morphTimer) {
+                    clearTimeout(morphTimer);
+                }
+                morphTimer = setTimeout(() => {
+                    textMorphTarget = 1;
+                    textFireworksActive = true;
+                    textFireworksStart = 0;
+                    lastTextBurst = 0;
+                    backBtn.classList.remove("show");
+                }, 700);
+            }
+
+            if (textMorph > 0.96 && textFireworksActive) {
+                if (!textFireworksStart) {
+                    textFireworksStart = time;
+                }
+                const burstInterval = 320;
+                if (!lastTextBurst || time - lastTextBurst > burstInterval) {
+                    spawnTextFireworks(centerX, centerY);
+                    lastTextBurst = time;
+                }
+                if (time - textFireworksStart > textFireworksDuration) {
+                    textFireworksActive = false;
+                }
+            }
+
+            if (textMorph > 0.96 && !textFireworksActive && fireworks.length === 0) {
+                backBtn.classList.add("show");
+                sequenceComplete = true;
+            }
+            const pulse = 1 + 0.03 * Math.sin(time * 0.002);
+            const scaleBase = Math.min(w, h) * 0.02 * pulse;
+            const angY = 0;
+            const angX = 0;
+            const cosY = Math.cos(angY);
+            const sinY = Math.sin(angY);
+            const cosX = Math.cos(angX);
+            const sinX = Math.sin(angX);
+            const fov = 500;
+
+            const heartCenterY = centerY;
+            ctx.globalCompositeOperation = "lighter";
+
+            for (let i = 0; i < points.length; i += 1) {
+                const p = points[i];
+                const wobble = Math.sin(time * p.speed + p.phase);
+                const wobble2 = Math.cos(time * p.speed * 1.3 + p.phase);
+                const hx = p.sx + (p.bx - p.sx) * gather;
+                const hy = p.sy + (p.by - p.sy) * gather;
+                const hz = p.sz + (p.bz - p.sz) * gather;
+                const gx = hx + (p.tx - p.bx) * textMorph;
+                const gy = hy + (p.ty - p.by) * textMorph;
+                const gz = hz + (p.tz - p.bz) * textMorph;
+                const wobbleScale = 1 - textMorph * 0.85;
+                const jitterScale = (1 - gather) * (1 - textMorph);
+                let x = gx + wobble * p.amp * wobbleScale + (Math.random() - 0.5) * p.jitter * jitterScale;
+                let y = gy + wobble2 * p.amp * 0.7 * wobbleScale + (Math.random() - 0.5) * p.jitter * jitterScale;
+                let z = gz + wobble * p.amp * 2.4 * wobbleScale;
+
+                const x1 = x * cosY - z * sinY;
+                const z1 = x * sinY + z * cosY;
+                const y1 = y * cosX - z1 * sinX;
+                const z2 = y * sinX + z1 * cosX;
+
+                const scale = fov / (fov + z2);
+                const px = centerX + x1 * scale * scaleBase;
+                const py = heartCenterY - y1 * scale * scaleBase;
+
+                const alpha = Math.min(1, Math.max(0.28, scale));
+                const size = Math.max(1, (p.edge ? 2.6 : 1.9) * scale);
+                const c = Math.floor(210 + 45 * alpha);
+                const g = Math.floor(100 + 40 * textMorph);
+                ctx.fillStyle = `rgba(${c}, ${g}, 150, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.globalCompositeOperation = "source-over";
+            updateFireworks();
+            renderFireworks();
+            requestAnimationFrame(render);
+        };
+
+        const start = () => {
+            buildHeart();
+            requestAnimationFrame(render);
+        };
+        resize();
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(start);
+        } else {
+            start();
+        }
+        window.addEventListener("resize", () => {
+            resize();
+        });
+        canvas.addEventListener("mouseenter", () => {
+            targetGather = 1;
+        });
+        canvas.addEventListener("mouseleave", () => {
+            if (sequenceComplete) return;
+            targetGather = 0;
+            cornerBurstDone = false;
+            textMorphTarget = 0;
+            lastTextBurst = 0;
+            textFireworksActive = false;
+            textFireworksStart = 0;
+            backBtn.classList.remove("show");
+            if (morphTimer) {
+                clearTimeout(morphTimer);
+                morphTimer = null;
+            }
+        });
+        backBtn.addEventListener("click", () => {
+            window.location.href = "next-1.html";
+        });
+    </script>
+</body>
+</html>
