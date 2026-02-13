@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div class="wrap">
         <div class="heart-wrap">
@@ -26,22 +28,26 @@
             <h2 id="modal-title">For Your Valentine 💕💝💖🤍</h2>
             <p>Happy Valentine's day,</p>
             <p>I know these past days weren't easy for us.</p>
-            <p>We both felt tired, confused, and a little scared, but somehow, we're still here, choosing each other again. And that <b>means</b> more to me than you can imagine.</p>
+            <p>We both felt tired, confused, and a little scared, but somehow, we're still here, choosing each other
+                again. And that <b>means</b> more to me than you can imagine.</p>
             <p>I want you to <b>know something very clearly:</b></p>
             <never><b>Loving you</b> has <b>never been a burden</b> to me.</p>
-            <p>Trying, waiting, and working hard is not a sacrifice, it's my choice, because <b>you are worth it.</b></p>
-            <p></p>
-            <p>Even from far away, my heart has <b>never</b> left your side. Every day, everything I do, <b>I carry “us” with me.</b></p>
-            <p>Thank you for <b>your patience.</b></p>
-            <p>Thank you for <b>choosing us, even when it's hard.</b></p>
-            <p>Thank you for being <b>gentle with my feelings</b>, even when I don't always know how to express them well.</p>
-            <p>This Valentine's Day, <b>I don't promise perfection.</b></p>
-            <p>But I promise <b>honesty, effort, and a love that doesn't run away when things get difficult.</b></p>
-            <p>You are <b>deeply loved, chosen, and cherished today, and every day after.</b></p>
-            <p class="val">Happy Valentine's Day, my love 😘💖🤍</p>
-            <p>I'm so grateful that it's you.</p>
-            <p>Always yours,</p>
-            <p>Your Babe - Hai💖</p>
+                <p>Trying, waiting, and working hard is not a sacrifice, it's my choice, because <b>you are worth
+                        it.</b></p>
+                <p></p>
+                <p>Even from far away, my heart has <b>never</b> left your side. Every day, everything I do, <b>I carry
+                        “us” with me.</b></p>
+                <p>Thank you for <b>your patience.</b></p>
+                <p>Thank you for <b>choosing us, even when it's hard.</b></p>
+                <p>Thank you for being <b>gentle with my feelings</b>, even when I don't always know how to express them
+                    well.</p>
+                <p>This Valentine's Day, <b>I don't promise perfection.</b></p>
+                <p>But I promise <b>honesty, effort, and a love that doesn't run away when things get difficult.</b></p>
+                <p>You are <b>deeply loved, chosen, and cherished today, and every day after.</b></p>
+                <p class="val">Happy Valentine's Day, my love 😘💖🤍</p>
+                <p>I'm so grateful that it's you.</p>
+                <p>Always yours,</p>
+                <p>Your Babe - Hai💖</p>
         </div>
     </div>
     <button class="next-btn" id="next-btn" type="button">Next</button>
@@ -51,10 +57,13 @@
         * {
             box-sizing: border-box;
         }
-        html, body {
+
+        html,
+        body {
             height: 100%;
             margin: 0;
         }
+
         body {
             display: flex;
             align-items: center;
@@ -63,18 +72,22 @@
             padding: 24px 16px calc(18vh + env(safe-area-inset-bottom));
             overflow: hidden;
         }
+
         .val {
             color: #d46c89;
             font-weight: bold;
         }
+
         .wrap {
             width: clamp(220px, 40vw, 420px);
             max-width: 90vw;
         }
+
         .heart-wrap {
             position: relative;
             display: inline-block;
         }
+
         .heart-img {
             width: 100%;
             height: auto;
@@ -83,12 +96,14 @@
             transform-origin: center;
             animation: heartDrop 0.9s cubic-bezier(0.22, 0.75, 0.3, 1) forwards, heartPulse 1.8s ease-in-out 1s infinite;
         }
+
         .heart-img.hide {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
             animation: none;
         }
+
         .seed {
             position: absolute;
             left: 50%;
@@ -101,9 +116,11 @@
             opacity: 0;
             pointer-events: none;
         }
+
         .seed.drop {
             animation: seedDrop 2.8s ease-in forwards;
         }
+
         .drop-line {
             margin-top: clamp(140px, 22vh, 240px);
             position: absolute;
@@ -118,12 +135,15 @@
             transform-origin: center;
             opacity: 0;
         }
+
         .drop-line.show {
             animation: lineOut 0.5s ease-out forwards;
         }
+
         .drop-line.shift {
             animation: lineOut 0.5s ease-out forwards, driftRight 2.8s ease-in-out 0.4s forwards;
         }
+
         .lily {
             position: fixed;
             margin-top: 67px;
@@ -138,6 +158,7 @@
             opacity: -1;
             pointer-events: none;
         }
+
         .tulip {
             position: fixed;
             margin-top: 34px;
@@ -152,19 +173,24 @@
             opacity: 0;
             pointer-events: none;
         }
+
         .lily.show {
             animation: lilyGrow 1s ease-out forwards;
         }
+
         .tulip.show {
             animation: lilyGrow 1s ease-out forwards;
             animation-delay: 0.1s;
         }
+
         .lily.shift {
             animation: lilyGrow 1s ease-out forwards, driftRight 3s ease-in-out 0.6s forwards;
         }
+
         .tulip.shift {
             animation: lilyGrow 1s ease-out forwards, driftRight 3s ease-in-out 0.6s forwards;
         }
+
         .letter-wrap {
             position: fixed;
             left: 30%;
@@ -179,20 +205,24 @@
             align-items: center;
             gap: 12px;
         }
+
         .letter-img {
             width: clamp(240px, 40vw, 520px);
             height: auto;
             display: block;
             transform-origin: center;
         }
+
         .letter-wrap.pop .letter-img {
             animation: letterPop 0.6s ease-out;
         }
+
         .letter-wrap.reveal {
             opacity: 1;
             transform: translate(-50%, -50%) translateX(-6%) translateY(0) scale(1);
             pointer-events: auto;
         }
+
         .open-btn {
             position: absolute;
             top: 85%;
@@ -208,10 +238,12 @@
             z-index: 1;
             transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
+
         .open-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(120, 60, 80, 0.18);
         }
+
         .modal {
             position: fixed;
             inset: 0;
@@ -220,14 +252,17 @@
             justify-content: center;
             z-index: 10;
         }
+
         .modal.show {
             display: flex;
         }
+
         .modal-backdrop {
             position: absolute;
             inset: 0;
             background: rgba(20, 12, 16, 0.45);
         }
+
         .modal-card {
             position: relative;
             width: min(540px, 86vw);
@@ -243,17 +278,21 @@
             transform: scale(0.85);
             animation: none;
         }
+
         .modal.show .modal-card {
             animation: modalPop 0.35s ease-out forwards;
         }
+
         .modal-card h2 {
             margin: 0 0 10px;
             font-size: 22px;
         }
+
         .modal-card p {
             margin: 0;
             line-height: 1.5;
         }
+
         .modal-close {
             position: absolute;
             right: 12px;
@@ -267,6 +306,7 @@
             font-size: 18px;
             cursor: pointer;
         }
+
         .next-btn {
             position: fixed;
             right: 24px;
@@ -284,11 +324,13 @@
             pointer-events: none;
             transition: opacity 0.25s ease, transform 0.2s ease;
         }
+
         .next-btn.show {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(-2px);
         }
+
         .page-swipe {
             position: fixed;
             inset: 0;
@@ -297,9 +339,11 @@
             transform-origin: right center;
             z-index: 20;
         }
+
         .page-swipe.run {
             animation: flipOut 0.7s ease-in-out forwards;
         }
+
         .snow-layer {
             position: fixed;
             inset: 0;
@@ -307,6 +351,7 @@
             overflow: hidden;
             z-index: 5;
         }
+
         .snowflake {
             position: absolute;
             top: -10vh;
@@ -318,228 +363,286 @@
             animation: fallDown linear forwards;
             will-change: transform;
         }
+
         @media (max-width: 768px) {
             body {
                 padding: 18px 12px calc(20vh + env(safe-area-inset-bottom));
-                overflow: auto;
+                overflow: hidden;
+                height: 100dvh;
+                position: fixed;
+                width: 100%;
             }
+
             .wrap {
                 width: clamp(200px, 70vw, 320px);
             }
+
             .drop-line {
                 width: 95vw;
                 height: 8px;
                 top: calc(100% + 18px);
             }
+
             .snowflake {
                 width: 7px;
                 height: 7px;
             }
+
             .letter-wrap {
                 left: 50%;
-                top: 34%;
+                top: 45%;
                 transform: translate(-50%, -50%) translateY(6px) scale(0.98);
                 gap: 8px;
             }
+
             .letter-img {
                 width: clamp(240px, 70vw, 380px);
             }
+
             .open-btn {
                 margin-top: -4px;
                 font-size: 15px;
                 padding: 9px 20px;
             }
+
             .next-btn {
                 right: 16px;
                 bottom: 16px;
                 font-size: 14px;
                 padding: 10px 20px;
+                background: rgba(255, 246, 249, 0.9);
             }
+
             .modal-card {
                 width: min(92vw, 520px);
                 padding: 18px 16px;
             }
+
             .modal-card h2 {
                 font-size: 20px;
             }
+
             .modal-card p {
                 font-size: 14px;
             }
+
             .lily {
-                --base-left: 44%;
+                --base-left: 48%;
                 left: var(--base-left);
                 top: var(--line-y, 68%);
+                width: clamp(100px, 25vw, 180px);
+                --drift-left: 30%;
             }
+
             .tulip {
-                --base-left: 66%;
+                --base-left: 52%;
                 left: var(--base-left);
-                top: var(--line-y, 67%);
+                top: var(--line-y, 68%);
+                width: clamp(90px, 22vw, 160px);
+                --drift-left: 32%;
             }
         }
+
         @media (max-width: 480px) {
             .letter-wrap {
-                top: 30%;
+                top: 42%;
                 transform: translate(-50%, -50%) translateY(0) scale(0.98);
                 gap: 6px;
             }
+
             .letter-img {
                 width: clamp(200px, 86vw, 320px);
             }
+
             .open-btn {
                 top: 88%;
                 font-size: 14px;
                 padding: 8px 18px;
             }
+
             .lily {
                 margin-top: 38px;
-                margin-right: 70px;
-                --base-left: 52%;
+                margin-right: 0;
+                --base-left: 10%;
                 left: var(--base-left);
                 top: var(--line-y, 68%);
             }
+
             .tulip {
                 margin-top: 19px;
-                --base-left: 62%;
+                --base-left: 90%;
                 left: var(--base-left);
                 top: var(--line-y, 68%);
+            }
         }
-    }
+
         @media (min-width: 1024px) {
             body {
                 padding-bottom: 14vh;
             }
+
             .modal-card {
                 max-height: none;
                 overflow: visible;
             }
+
             .drop-line {
                 width: 75vw;
             }
+
             .letter-wrap {
                 left: 40%;
                 top: 34%;
             }
+
             .letter-img {
                 width: clamp(280px, 36vw, 520px);
             }
+
             .open-btn {
                 top: 85%;
             }
+
             .lily {
                 --base-left: 50%;
                 left: var(--base-left);
                 top: var(--line-y, 67.59%);
             }
+
             .tulip {
                 --base-left: 61%;
                 left: var(--base-left);
                 top: var(--line-y, 67%);
             }
         }
+
         @media (min-width: 1200px) {
             .letter-wrap {
                 left: 35%;
                 top: 32%;
             }
+
             .letter-img {
                 width: clamp(300px, 32vw, 560px);
             }
+
             .open-btn {
                 top: 84%;
             }
         }
+
         @keyframes seedDrop {
             0% {
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 1;
             }
+
             95% {
                 transform: translate(-50%, calc(-50% + var(--drop-distance, 240px))) scale(1);
                 opacity: 1;
             }
+
             100% {
                 transform: translate(-50%, calc(-50% + var(--drop-distance, 240px))) scale(1);
                 opacity: 0;
             }
         }
+
         @keyframes lineOut {
             from {
                 transform: translateX(-50%) scaleX(0);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(-50%) scaleX(1);
                 opacity: 1;
             }
         }
+
         @keyframes lilyGrow {
             to {
                 transform: translate(-50%, -100%) translateY(0) scaleY(1);
                 opacity: 1;
             }
         }
+
         @keyframes driftRight {
             to {
                 left: calc(var(--base-left) + var(--drift-left, 20%));
             }
         }
+
         @keyframes fallDown {
             to {
                 transform: translateY(110vh);
             }
         }
+
         @keyframes letterPop {
             0% {
                 transform: scale(0.85);
                 opacity: 0.7;
             }
+
             60% {
                 transform: scale(1.06);
                 opacity: 1;
             }
+
             100% {
                 transform: scale(1);
             }
         }
+
         @keyframes modalPop {
             0% {
                 opacity: 0;
                 transform: scale(0.85);
             }
+
             70% {
                 opacity: 1;
                 transform: scale(1.03);
             }
+
             100% {
                 opacity: 1;
                 transform: scale(1);
             }
         }
+
         @keyframes flipOut {
             to {
                 transform: perspective(1200px) rotateY(0deg);
             }
         }
+
         @keyframes heartPulse {
             0% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.04);
             }
+
             100% {
                 transform: scale(1);
             }
         }
+
         @keyframes heartDrop {
             0% {
                 transform: translateY(-120vh) scale(0.92);
                 opacity: 0;
             }
+
             70% {
                 transform: translateY(10px) scale(1.02);
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
@@ -665,4 +768,5 @@
         });
     </script>
 </body>
+
 </html>

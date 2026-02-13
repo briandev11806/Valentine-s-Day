@@ -116,6 +116,33 @@
             }
         }
     </style>
+    <style>
+        @media (max-width: 600px) {
+            .goma {
+                width: 200px;
+                margin-bottom: 20px;
+            }
+            .prompt {
+                font-size: 24px;
+                margin-bottom: 24px;
+                margin-left: 0;
+            }
+            .actions {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                align-items: center;
+                width: 100%;
+            }
+            .actions button {
+                width: 80%;
+                max-width: 280px;
+                margin: 0;
+                padding: 16px 24px;
+                font-size: 20px;
+            }
+        }
+    </style>
     <script>
         const noBtn = document.getElementById("no-btn");
         const yesBtn = document.getElementById("yes-btn");

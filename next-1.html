@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
         }
+
         body {
             display: flex;
             align-items: center;
@@ -19,6 +22,7 @@
             background: #FEE7EF;
             overflow: hidden;
         }
+
         .layout {
             display: flex;
             align-items: flex-start;
@@ -27,6 +31,7 @@
             width: min(1100px, 92vw);
             z-index: 1;
         }
+
         .page-flip-in {
             position: fixed;
             inset: 0;
@@ -37,12 +42,14 @@
             z-index: 10;
             pointer-events: none;
         }
+
         .hearts {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 0;
         }
+
         .heart {
             position: absolute;
             top: -20px;
@@ -52,6 +59,7 @@
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
             will-change: transform;
         }
+
         .couple-img {
             max-width: 48vw;
             max-height: 90vh;
@@ -59,21 +67,25 @@
             height: auto;
             display: block;
         }
+
         .right-text {
             max-width: 420px;
             color: #6a3642;
             font-size: 18px;
             line-height: 1.5;
         }
+
         .right-text h2 {
             margin: 0 0 12px;
             font-size: 32px;
             font-family: "Great Vibes", cursive;
             font-weight: 500;
         }
+
         .right-text p {
             margin: 0 0 10px;
         }
+
         .back-btn {
             position: fixed;
             left: 24px;
@@ -89,10 +101,12 @@
             z-index: 12;
             transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
+
         .back-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(120, 60, 80, 0.18);
         }
+
         .next-btn {
             position: fixed;
             right: 24px;
@@ -108,117 +122,154 @@
             z-index: 12;
             transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
+
         .next-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(120, 60, 80, 0.18);
         }
+
         .type-line {
             white-space: pre-wrap;
         }
+
         @media (max-width: 768px) {
             body {
-                overflow: auto;
+                height: auto;
+                min-height: 100%;
+                overflow-y: auto;
+                padding-bottom: 80px;
+                /* Space for buttons */
+                align-items: flex-start;
+                /* Prevent centering form clipping top */
             }
+
             .layout {
                 flex-direction: column;
-                gap: 18px;
+                gap: 24px;
                 padding: 24px 0;
+                align-items: center;
             }
+
             .couple-img {
-                max-width: 86vw;
-                max-height: 60vh;
+                max-width: 90vw;
+                max-height: 50vh;
+                margin: 0 auto;
             }
+
             .right-text {
-                max-width: 86vw;
+                max-width: 90vw;
                 text-align: center;
                 font-size: 16px;
+                padding: 0 16px;
             }
+
             .back-btn {
                 left: 16px;
                 bottom: 16px;
                 font-size: 14px;
                 padding: 10px 20px;
+                background: rgba(255, 246, 249, 0.9);
             }
+
             .next-btn {
                 right: 16px;
                 bottom: 16px;
                 font-size: 14px;
                 padding: 10px 20px;
+                background: rgba(255, 246, 249, 0.9);
             }
         }
+
         @media (max-width: 480px) {
             .layout {
                 gap: 14px;
                 padding: 18px 0;
             }
+
             .couple-img {
                 max-width: 90vw;
                 max-height: 52vh;
             }
+
             .right-text {
                 font-size: 15px;
             }
+
             .right-text h2 {
                 font-size: 24px;
             }
         }
+
         @media (min-width: 1024px) {
             .layout {
                 width: min(1200px, 90vw);
                 gap: 36px;
             }
+
             .couple-img {
                 max-width: 46vw;
                 max-height: 70vh;
             }
+
             .right-text {
                 max-width: 460px;
                 font-size: 19px;
             }
+
             .right-text h2 {
                 font-size: 30px;
             }
         }
+
         @media (min-width: 1200px) {
             .layout {
                 width: min(1320px, 88vw);
                 gap: 44px;
             }
+
             .couple-img {
                 max-width: 44vw;
                 max-height: 82vh;
             }
+
             .right-text {
                 max-width: 520px;
                 font-size: 20px;
             }
+
             .right-text h2 {
                 font-size: 32px;
             }
         }
+
         @media (min-width: 1600px) {
             .layout {
                 width: min(1500px, 84vw);
                 gap: 52px;
             }
+
             .couple-img {
                 max-width: 40vw;
                 max-height: 74vh;
             }
+
             .right-text {
                 max-width: 580px;
                 font-size: 21px;
             }
+
             .right-text h2 {
                 font-size: 36px;
             }
         }
+
         @keyframes flipIn {
             to {
                 transform: perspective(1200px) rotateY(90deg);
                 opacity: 0;
             }
         }
+
         @keyframes fall {
             to {
                 transform: translateY(110vh);
@@ -226,6 +277,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="hearts" id="hearts"></div>
     <div class="page-flip-in" aria-hidden="true"></div>
@@ -233,10 +285,18 @@
         <img class="couple-img" src="Couple.png" alt="couple">
         <div class="right-text">
             <h2 class="type-line" data-text="For You, On Valentine's Day"></h2>
-            <p class="type-line" data-text="From the day I met you until now, I've realized that love isn't just about the happy beginnings or sweet moments. It's also about the quiet days, the misunderstandings, the distance, and the times when things aren't easy."></p>
-            <p class="type-line" data-text="We've been through fears, doubts, and difficult conversations, but what matters most to me is that we're still here, choosing to stay, to listen, and to understand each other better. That means more to me than perfection ever could."></p>
-            <p class="type-line" data-text="I don't cherish you because everything is always perfect, but because you're still here even when it's hard. Loving you has taught me patience, honesty, and what it truly means to grow together."></p>
-            <p class="type-line" data-text="Thank you for choosing me, for believing in us, and for being someone I truly want to protect, appreciate, and love more seriously with every passing day."></p>
+            <p class="type-line"
+                data-text="From the day I met you until now, I've realized that love isn't just about the happy beginnings or sweet moments. It's also about the quiet days, the misunderstandings, the distance, and the times when things aren't easy.">
+            </p>
+            <p class="type-line"
+                data-text="We've been through fears, doubts, and difficult conversations, but what matters most to me is that we're still here, choosing to stay, to listen, and to understand each other better. That means more to me than perfection ever could.">
+            </p>
+            <p class="type-line"
+                data-text="I don't cherish you because everything is always perfect, but because you're still here even when it's hard. Loving you has taught me patience, honesty, and what it truly means to grow together.">
+            </p>
+            <p class="type-line"
+                data-text="Thank you for choosing me, for believing in us, and for being someone I truly want to protect, appreciate, and love more seriously with every passing day.">
+            </p>
             <p class="type-line" data-text="Happy Valentine's Day, my love."></p>
             <p class="type-line" data-text="Always yours,"></p>
             <p class="type-line" data-text="Your Babe - Hai"></p>
@@ -327,4 +387,5 @@
 
     </script>
 </body>
+
 </html>
